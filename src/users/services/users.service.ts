@@ -1,9 +1,11 @@
 import {Injectable} from '@nestjs/common';
-import {CreateUserDto} from "./dtos/create-user.dto";
+import {SerializedUser} from "../types/SerializedUser";
+import {UserEntity} from "../types/UserEntity";
+import {CreateUserDto} from "../dtos/create-user.dto";
 
 @Injectable()
 export class UsersService {
-    private readonly users: CreateUserDto[] = [
+    private readonly users: UserEntity[] = [
         {
             id: "1",
             name: null,
@@ -24,11 +26,13 @@ export class UsersService {
     ]
 
     search() {
-        return this.users;
+        return this.users.map(user => {
+            return new SerializedUser(user);
+        });
     }
 
     findById(id: string) {
-        return this.users.find(user => user.id === id);
+        return new SerializedUser(this.users.find(user => user.id === id));
     }
 
     create(createUserDto: CreateUserDto) {

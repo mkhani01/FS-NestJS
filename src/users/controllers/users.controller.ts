@@ -1,18 +1,31 @@
-import {Body, Controller, Get, HttpException, HttpStatus, Param, Post, UsePipes, ValidationPipe} from '@nestjs/common';
-import {CreateUserDto} from './dtos/create-user.dto';
-import {UsersService} from "./users.service";
+import {
+    Body,
+    ClassSerializerInterceptor,
+    Controller,
+    Get,
+    HttpException,
+    HttpStatus, Inject,
+    Param,
+    Post, UseInterceptors,
+    UsePipes,
+    ValidationPipe
+} from '@nestjs/common';
+import {CreateUserDto} from '../dtos/create-user.dto';
+import {UsersService} from "../services/users.service";
 
 
 @Controller('users')
 export class UsersController {
-    constructor(private readonly usersService: UsersService) {
+    constructor(@Inject('USER_SERVICE') private readonly usersService: UsersService) {
     }
 
+    @UseInterceptors(ClassSerializerInterceptor)
     @Get('/search')
     async search() {
         return this.usersService.search();
     }
 
+    @UseInterceptors(ClassSerializerInterceptor)
     @Get('/search/:id')
     async findById(@Param('id') id: string) {
         const user = await this.usersService.findById(id);
