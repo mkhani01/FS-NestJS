@@ -5,7 +5,7 @@ import {Exclude} from "class-transformer";
 export class SerializedUser {
     name?: string;
     lastName?: string;
-    id: string;
+    id: number;
     username: string;
     phoneNumber: string;
     nationalCode?: string;
@@ -16,6 +16,7 @@ export class SerializedUser {
 
     @Exclude()
     password: string;
+
     constructor(partial: Partial<SerializedUser>) {
         Object.assign(this, partial);
     }

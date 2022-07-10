@@ -1,9 +1,9 @@
 import {RoleEntity} from "./RoleEntity";
 
 export class UserEntity {
+    id: number;
     name?: string;
     lastName?: string;
-    id: string;
     username: string;
     password: string;
     phoneNumber: string;

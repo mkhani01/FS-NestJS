@@ -8,7 +8,8 @@ import {
     Param,
     Post, UseFilters, UseInterceptors,
     UsePipes,
-    ValidationPipe
+    ValidationPipe,
+    ParseIntPipe
 } from '@nestjs/common';
 import {CreateUserDto} from '../dtos/create-user.dto';
 import {UsersService} from "../services/users.service";
@@ -29,7 +30,7 @@ export class UsersController {
     @UseInterceptors(ClassSerializerInterceptor)
     @Get('/search/:id')
     @UseFilters(new HttpExceptionFilter())
-    async findById(@Param('id') id: string) {
+    async findById(@Param('id', ParseIntPipe) id: number) {
         const user = await this.usersService.findById(id);
         if (user) return user;
         else throw new HttpException("user not found !", HttpStatus.NOT_FOUND);
@@ -40,5 +41,4 @@ export class UsersController {
     async create(@Body() createUserDto: CreateUserDto) {
         return this.usersService.create(createUserDto);
     }
-
 }

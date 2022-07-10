@@ -7,7 +7,7 @@ import {CreateUserDto} from "../dtos/create-user.dto";
 export class UsersService {
     private readonly users: UserEntity[] = [
         {
-            id: "1",
+            id: 1,
             name: null,
             lastName: null,
             nationalCode: null,
@@ -17,7 +17,7 @@ export class UsersService {
             phoneNumber: "09121234563",
             email: "admin3@admin3.com",
             roles: [{
-                id: "1",
+                id: 1,
                 name: "admin",
                 permissions: ["ALL"],
                 color: null
@@ -31,14 +31,27 @@ export class UsersService {
         });
     }
 
-    findById(id: string) {
+    findById(id: number) {
         const user = this.users.find(user => user.id === id);
         if (user) return new SerializedUser(user);
         else return user
     }
 
     create(createUserDto: CreateUserDto) {
-        this.users.push(createUserDto);
+        const {email, password, phoneNumber, username, name, lastName, nationalCode, address} = createUserDto;
+        const user: UserEntity = {
+            address: address,
+            email: email,
+            lastName: lastName,
+            name: name,
+            nationalCode: nationalCode,
+            password: password,
+            phoneNumber: phoneNumber,
+            roles: [],
+            username: username,
+            id: this.users.length + 1
+        };
+        this.users.push(user);
         return this.users;
     }
 }
