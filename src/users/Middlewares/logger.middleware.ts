@@ -8,7 +8,6 @@ export class LoggerMiddleware implements NestMiddleware {
             console.info('Request to path: \n' + req.route.path + '\n with method : \n ' + req.method);
         } else {
             console.info("\x1b[34m%s\x1b[0m", 'Request to path: \n' + req.route.path + '\n with method : \n ' + req.method + '\n and body: \n ' + JSON.stringify(req.body));
-
-            next();
         }
+        next();
     }}
