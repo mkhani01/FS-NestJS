@@ -1,6 +1,6 @@
 export class RoleEntity {
-    id: string;
+    id: number;
     name: string;
     permissions: string[];
-    color: string;
+    color?: string;
 }
