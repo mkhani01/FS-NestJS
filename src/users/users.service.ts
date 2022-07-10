@@ -1,32 +1,25 @@
 import {Injectable} from '@nestjs/common';
-import {SingleUser} from "./interfaces/singleUser";
+import {CreateUserDto} from "./dtos/create-user.dto";
 
 @Injectable()
 export class UsersService {
-    private readonly users: SingleUser[] = [
+    private readonly users: CreateUserDto[] = [
         {
             id: "1",
-            username: "admin",
-            password: "admin",
-            phoneNumber: "09121234567",
-            email: "admin@admin.com",
-            roles: []
-        },
-        {
-            id: "2",
-            username: "admin2",
-            password: "admin2",
-            phoneNumber: "09121234562",
-            email: "admin2@admin2.com",
-            roles: []
-        },
-        {
-            id: "3",
+            name: null,
+            lastName: null,
+            nationalCode: null,
+            address: null,
             username: "admin3",
             password: "admin3",
             phoneNumber: "09121234563",
             email: "admin3@admin3.com",
-            roles: []
+            roles: [{
+                id: "1",
+                name: "admin",
+                permissions: ["ALL"],
+                color: null
+            }]
         }
     ]
 
@@ -36,5 +29,10 @@ export class UsersService {
 
     findById(id: string) {
         return this.users.find(user => user.id === id);
+    }
+
+    create(createUserDto: CreateUserDto) {
+        this.users.push(createUserDto);
+        return this.users;
     }
 }
