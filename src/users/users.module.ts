@@ -1,6 +1,7 @@
-import { Module } from '@nestjs/common';
+import {Module, NestModule} from '@nestjs/common';
 import {UsersController} from "./controllers/users.controller";
 import {UsersService} from "./services/users.service";
+import {LoggerMiddleware} from "./Middlewares/logger.middleware";
 
 @Module({
     controllers: [UsersController],
@@ -9,4 +10,10 @@ import {UsersService} from "./services/users.service";
         useClass: UsersService
     }],
 })
-export class UsersModule {}
+export class UsersModule implements NestModule {
+    configure(consumer: any) {
+        consumer
+            .apply(LoggerMiddleware)
+            .forRoutes(UsersController);
+    }
+}
