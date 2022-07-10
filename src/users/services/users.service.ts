@@ -32,7 +32,9 @@ export class UsersService {
     }
 
     findById(id: string) {
-        return new SerializedUser(this.users.find(user => user.id === id));
+        const user = this.users.find(user => user.id === id);
+        if (user) return new SerializedUser(user);
+        else return user
     }
 
     create(createUserDto: CreateUserDto) {

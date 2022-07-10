@@ -6,12 +6,13 @@ import {
     HttpException,
     HttpStatus, Inject,
     Param,
-    Post, UseInterceptors,
+    Post, UseFilters, UseInterceptors,
     UsePipes,
     ValidationPipe
 } from '@nestjs/common';
 import {CreateUserDto} from '../dtos/create-user.dto';
 import {UsersService} from "../services/users.service";
+import {HttpExceptionFilter} from "../../ExceptionHandler/http-exceptions.filter";
 
 
 @Controller('users')
@@ -27,10 +28,11 @@ export class UsersController {
 
     @UseInterceptors(ClassSerializerInterceptor)
     @Get('/search/:id')
+    @UseFilters(new HttpExceptionFilter())
     async findById(@Param('id') id: string) {
         const user = await this.usersService.findById(id);
         if (user) return user;
-        else throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+        else throw new HttpException("user not found !", HttpStatus.NOT_FOUND);
     }
 
     @Post('/create')
