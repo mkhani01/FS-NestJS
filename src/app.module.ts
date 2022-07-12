@@ -1,10 +1,12 @@
 import {Module} from '@nestjs/common';
 import {UsersModule} from './users/users.module';
 import {TypeOrmModule} from "@nestjs/typeorm";
+import { RolesController } from './roles/controllers/roles.controller';
+import { RolesModule } from './roles/roles.module';
 import UserEntities from "./users/Entities";
 
 @Module({
-    imports: [UsersModule, TypeOrmModule.forRoot({
+    imports: [UsersModule,RolesModule, TypeOrmModule.forRoot({
         type: 'mysql',
         host: 'localhost',
         port: 3306,
@@ -14,7 +16,7 @@ import UserEntities from "./users/Entities";
         entities: [...UserEntities],
         synchronize: true,
     })],
-    controllers: [],
+    controllers: [RolesController],
     providers: [],
 })
 export class AppModule {

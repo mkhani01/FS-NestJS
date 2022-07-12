@@ -8,7 +8,7 @@ import {
     IsArray
 } from 'class-validator';
 import {Type} from "class-transformer";
-import {CreateRoleDto} from './create-role.dto';
+import {Role} from '../types/Role';
 
 
 export class CreateUserDto {
@@ -41,8 +41,8 @@ export class CreateUserDto {
 
     @IsArray()
     @ValidateNested({each: true})
-    @Type(() => CreateRoleDto)
-    roles: CreateRoleDto[]
+    @Type(() => Role )
+    roles: Role[]
 
     @IsOptional()
     @Length(0, 100)

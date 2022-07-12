@@ -1,8 +1,8 @@
 import {Column, Entity, JoinTable,ManyToMany, PrimaryGeneratedColumn} from "typeorm";
-import {Role} from "./Role";
+import {RoleEntity} from "./RoleEntity";
 
 @Entity()
-export class User {
+export class UserEntity {
     @PrimaryGeneratedColumn({
         type: "bigint"
     })
@@ -42,11 +42,13 @@ export class User {
     })
     email: string;
 
-    @ManyToMany(() => Role)
+    @ManyToMany(() => RoleEntity,{ cascade : true})
     @JoinTable()
-    roles: Role[];
+    roles: RoleEntity[];
 
-    @Column()
+    @Column({
+        nullable: true,
+    })
     address: string;
 
 }

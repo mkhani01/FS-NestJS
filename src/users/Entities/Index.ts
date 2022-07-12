@@ -1,9 +1,9 @@
-import {User} from "./User";
-import {Role} from "./Role";
-import {Permission} from "./Permission";
+import {UserEntity} from "./UserEntity";
+import {RoleEntity} from "./RoleEntity";
+import {PermissionEntity} from "./PermissionEntity";
 
-const UserEntities = [User, Role, Permission];
+const UserEntities = [UserEntity, RoleEntity, PermissionEntity];
 
-export {User};
+export {UserEntity};
 
 export default UserEntities;
