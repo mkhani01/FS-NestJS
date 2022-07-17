@@ -32,13 +32,13 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto) {
-    const newUser = await this.userRepository.create(createUserDto);
+    const newUser = this.userRepository.create(createUserDto);
     const savedUser = await this.userRepository.save(newUser);
-    return await this.findById(savedUser.id);
+    return this.findById(savedUser.id);
   }
 
   async findUserByUserName(username: string) {
-    return await this.userRepository.findOne({
+    return this.userRepository.findOne({
       where: {
         username: username,
       },

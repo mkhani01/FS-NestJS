@@ -22,7 +22,7 @@ export class RolesController {
 
   @Get('/search')
   async search() {
-    return await this.rolesService.search();
+    return this.rolesService.search();
   }
 
   @Get(`/search/:id`)

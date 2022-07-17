@@ -1,4 +1,4 @@
-import { Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AuthController } from './controllers/auth.controller';
 import { AuthService } from './services/auth.service';
 import { UsersService } from '../users/services/users.service';
@@ -6,12 +6,19 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from '../users/Entities';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './utils/LocalStrategy';
-import { UsersModule } from '../users/users.module';
-import { LoggerMiddleware } from '../Middlewares/logger.middleware';
-import { UsersController } from '../users/controllers/users.controller';
+import { JwtModule } from '@nestjs/jwt';
+import { jwtConstants } from './utils/constants';
+import { JwtStrategy } from './utils/jwt.strategy';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity]), PassportModule],
+  imports: [
+    TypeOrmModule.forFeature([UserEntity]),
+    PassportModule,
+    JwtModule.register({
+      secret: jwtConstants.secret,
+      signOptions: { expiresIn: '3600s' },
+    }),
+  ],
   controllers: [AuthController],
   providers: [
     {
@@ -23,6 +30,13 @@ import { UsersController } from '../users/controllers/users.controller';
       useClass: UsersService,
     },
     LocalStrategy,
+    JwtStrategy,
+  ],
+  exports: [
+    {
+      provide: 'AUTH_SERVICE',
+      useClass: AuthService,
+    },
   ],
 })
 export class AuthModule {}

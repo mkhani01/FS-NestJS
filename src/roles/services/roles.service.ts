@@ -11,7 +11,7 @@ export class RolesService {
   ) {}
 
   async search() {
-    return await this.roleRepository.find();
+    return this.roleRepository.find();
   }
 
   async findById(id: number) {
