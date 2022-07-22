@@ -8,16 +8,7 @@ import {
   ArrayMinSize,
 } from 'class-validator';
 
-type Role = {
-  id: number;
-  name?: string;
-};
-
-type owner = {
-  id: number;
-};
-
-export class CreateUserDto {
+export class CreateOwnerDto {
   @IsOptional()
   @Length(5, 20)
   name?: string;
@@ -47,15 +38,17 @@ export class CreateUserDto {
 
   @IsArray()
   @ArrayMinSize(1)
-  roles: Role[];
+  roles: number[];
 
   @IsOptional()
   @Length(0, 100)
   address?: string;
 
   @IsNotEmpty()
-  owner: owner[];
+  @Length(0, 100)
+  ownerName: string;
 
-  @IsOptional()
-  isMainUser: boolean = false;
+  @IsNotEmpty()
+  @Length(0, 100)
+  ownerDisplayName: string;
 }

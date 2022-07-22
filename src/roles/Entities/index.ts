@@ -1,7 +1,7 @@
 import { RoleEntity } from './RoleEntity';
 
-const RolesEntity = [RoleEntity];
+const RoleEntities = [RoleEntity];
 
 export { RoleEntity };
 
-export default RolesEntity;
+export default RoleEntities;

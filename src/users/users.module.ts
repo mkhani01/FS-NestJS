@@ -19,6 +19,12 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
       useClass: UsersService,
     },
   ],
+  exports: [
+    {
+      provide: 'USER_SERVICE',
+      useClass: UsersService,
+    },
+  ],
 })
 export class UsersModule implements NestModule {
   configure(consumer: any) {

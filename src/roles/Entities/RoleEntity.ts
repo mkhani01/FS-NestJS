@@ -4,8 +4,10 @@ import {
   PrimaryGeneratedColumn,
   ManyToMany,
   JoinTable,
+  OneToOne,
 } from 'typeorm';
 import { UserEntity } from 'src/users/Entities/UserEntity';
+import { OwnerEntity } from '../../owner/Entities';
 
 @Entity()
 export class RoleEntity {
@@ -30,10 +32,13 @@ export class RoleEntity {
   })
   color: string;
 
-  @ManyToMany(() => UserEntity, (user) => user.roles)
+  @ManyToMany(() => UserEntity)
   @JoinTable()
   users: UserEntity[];
 
   @Column({ nullable: true })
   description: string;
+
+  @OneToOne(() => OwnerEntity)
+  owner: OwnerEntity;
 }

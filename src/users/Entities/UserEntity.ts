@@ -1,11 +1,14 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { RoleEntity } from 'src/roles/Entities/RoleEntity';
+import { RoleEntity } from 'src/roles/Entities';
+import { OwnerEntity } from 'src/owner/Entities';
 
 @Entity()
 export class UserEntity {
@@ -56,4 +59,13 @@ export class UserEntity {
     nullable: true,
   })
   address: string;
+
+  @ManyToMany(() => OwnerEntity)
+  @JoinTable()
+  owner: OwnerEntity[];
+
+  @Column({
+    default: false,
+  })
+  isMainUser: boolean;
 }

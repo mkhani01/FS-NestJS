@@ -24,7 +24,7 @@ export class UsersService {
       where: {
         id: id,
       },
-      relations: ['roles'],
+      relations: ['roles', 'owner'],
     });
 
     if (user) return new SerializedUser(user);
@@ -32,6 +32,13 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto) {
+    const dtoData = { ...createUserDto, isMainUser: false };
+    const newUser = this.userRepository.create(dtoData);
+    const savedUser = await this.userRepository.save(newUser);
+    return this.findById(savedUser.id);
+  }
+
+  async creatMainUser(createUserDto: CreateUserDto) {
     const newUser = this.userRepository.create(createUserDto);
     const savedUser = await this.userRepository.save(newUser);
     return this.findById(savedUser.id);
@@ -42,6 +49,7 @@ export class UsersService {
       where: {
         username: username,
       },
+      relations: ['owner'],
     });
   }
 }

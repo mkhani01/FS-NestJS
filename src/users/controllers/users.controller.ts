@@ -17,6 +17,7 @@ import {
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { UsersService } from '../services/users.service';
 import { HttpExceptionFilter } from '../../ExceptionHandler/http-exceptions.filter';
+import { OwnerId } from '../../utils/user.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -26,7 +27,8 @@ export class UsersController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('/search')
-  async search() {
+  async search(@OwnerId() ownerId: number) {
+    console.log(ownerId);
     return this.usersService.search();
   }
 
