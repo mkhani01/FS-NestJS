@@ -5,6 +5,8 @@ import {
   ManyToMany,
   JoinTable,
   OneToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { UserEntity } from 'src/users/Entities/UserEntity';
 import { OwnerEntity } from '../../owner/Entities';
@@ -41,4 +43,10 @@ export class RoleEntity {
 
   @OneToOne(() => OwnerEntity)
   owner: OwnerEntity;
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
 }

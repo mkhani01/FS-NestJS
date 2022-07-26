@@ -1,11 +1,11 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
-  JoinColumn,
   JoinTable,
   ManyToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { RoleEntity } from 'src/roles/Entities';
 import { OwnerEntity } from 'src/owner/Entities';
@@ -68,4 +68,10 @@ export class UserEntity {
     default: false,
   })
   isMainUser: boolean;
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
 }

@@ -16,7 +16,7 @@ export class OwnerService {
   ) {}
 
   async search() {
-    return await this.ownerRepository.find({
+    return this.ownerRepository.find({
       relations: ['mainUser'],
     });
   }
@@ -33,7 +33,7 @@ export class OwnerService {
   }
 
   async createOwnerUser(createUserDto: CreateUserDto) {
-    return await this.usersService.creatMainUser(createUserDto);
+    return this.usersService.creatMainUser(createUserDto);
   }
 
   async createOwner(singleOwnerDto: SingleOwnerDto) {
@@ -61,7 +61,6 @@ export class OwnerService {
       owner: [{ id: newOwner.id }],
       roles: [{ id: 1 }],
     };
-    const x = await this.createOwnerUser(createUserDto);
-    return newOwner;
+    return this.createOwnerUser(createUserDto);
   }
 }

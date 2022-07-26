@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { RolesModule } from './roles/roles.module';
 import { AuthModule } from './auth/auth.module';
 import { OwnerModule } from './owner/owner.module';
+import { GlobalModule } from './global/global.module';
 import UserEntities from './users/Entities';
 import RoleEntities from './roles/Entities';
 import OwnerEntities from './owner/Entities';
@@ -14,6 +15,7 @@ import OwnerEntities from './owner/Entities';
     UsersModule,
     RolesModule,
     AuthModule,
+    GlobalModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',

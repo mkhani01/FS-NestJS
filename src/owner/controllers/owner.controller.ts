@@ -26,6 +26,6 @@ export class OwnerController {
   @Post('/create')
   @UsePipes(ValidationPipe)
   async create(@Body() createOwnerDto: CreateOwnerDto) {
-    return await this.ownerService.create(createOwnerDto);
+    return this.ownerService.create(createOwnerDto);
   }
 }
