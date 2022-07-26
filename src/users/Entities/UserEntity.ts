@@ -51,7 +51,7 @@ export class UserEntity {
   })
   email: string;
 
-  @ManyToMany(() => RoleEntity, (role) => role.users)
+  @ManyToMany(() => RoleEntity)
   @JoinTable()
   roles: RoleEntity[];
 
@@ -60,9 +60,9 @@ export class UserEntity {
   })
   address: string;
 
-  @ManyToMany(() => OwnerEntity)
+  @ManyToMany(() => OwnerEntity, void 0, { cascade: true, eager: true })
   @JoinTable()
-  owner: OwnerEntity[];
+  owners: OwnerEntity[];
 
   @Column({
     default: false,

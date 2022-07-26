@@ -5,7 +5,7 @@ import { OwnerEntity } from '../Entities';
 import { CreateOwnerDto } from '../dtos/create-owner.dto';
 import { SingleOwnerDto } from '../dtos/create-single-owner.dto';
 import { UsersService } from 'src/users/services/users.service';
-import { CreateUserDto } from 'src/users/dtos/create-user.dto';
+import { CreateMainUserDto } from 'src/users/dtos/create-main-user.dto';
 
 @Injectable()
 export class OwnerService {
@@ -32,8 +32,8 @@ export class OwnerService {
     else return null;
   }
 
-  async createOwnerUser(createUserDto: CreateUserDto) {
-    return this.usersService.creatMainUser(createUserDto);
+  async createOwnerUser(createMainUserDto: CreateMainUserDto, ownerId: number) {
+    return this.usersService.createMainUser(createMainUserDto, ownerId);
   }
 
   async createOwner(singleOwnerDto: SingleOwnerDto) {
@@ -48,7 +48,7 @@ export class OwnerService {
       displayName: createOwnerDto.ownerDisplayName,
     };
     const newOwner = await this.createOwner(singleOwnerDto);
-    const createUserDto: CreateUserDto = {
+    const createMainUserDto: CreateMainUserDto = {
       name: createOwnerDto.name,
       lastName: createOwnerDto.lastName,
       username: createOwnerDto.username,
@@ -58,9 +58,9 @@ export class OwnerService {
       email: createOwnerDto.email,
       address: createOwnerDto.address,
       isMainUser: true,
-      owner: [{ id: newOwner.id }],
+      owners: [{ id: newOwner.id }],
       roles: [{ id: 1 }],
     };
-    return this.createOwnerUser(createUserDto);
+    return this.createOwnerUser(createMainUserDto, newOwner.id);
   }
 }

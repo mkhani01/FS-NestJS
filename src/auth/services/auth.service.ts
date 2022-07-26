@@ -19,9 +19,10 @@ export class AuthService {
     }
   }
   async login(user: any) {
-    console.log(await this.globalService.test());
     const userDB = await this.userService.findUserByUserName(user.username);
-    const payload = { userDB, owner: userDB.owner[0] };
+    //Hint : The owner is first owner of the database for now , later user will select owner and
+    // there will be a default owner for each user
+    const payload = { userDB, owner: userDB.owners[0] };
     return {
       access_token: this.jwtService.sign(payload),
     };

@@ -17,7 +17,7 @@ import {
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { UsersService } from '../services/users.service';
 import { HttpExceptionFilter } from '../../ExceptionHandler/http-exceptions.filter';
-import { OwnerId } from '../../utils/user.decorator';
+import { userAndOwnerInfo, UserInfoType } from '../../utils/user.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -27,23 +27,28 @@ export class UsersController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('/search')
-  async search(@OwnerId() ownerId: number) {
-    console.log(ownerId);
-    return this.usersService.search();
+  async search(@userAndOwnerInfo() userInfo: UserInfoType) {
+    return this.usersService.search(userInfo.owner.id);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('/search/:id')
   @UseFilters(new HttpExceptionFilter())
-  async findById(@Param('id', ParseIntPipe) id: number) {
-    const user = await this.usersService.findById(id);
+  async findById(
+    @Param('id', ParseIntPipe) id: number,
+    @userAndOwnerInfo() userInfo: UserInfoType,
+  ) {
+    const user = await this.usersService.findById(id, userInfo.owner.id);
     if (user) return user;
     else throw new HttpException('user not found !', HttpStatus.NOT_FOUND);
   }
 
   @Post('/create')
   @UsePipes(ValidationPipe)
-  async create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  async create(
+    @Body() createUserDto: CreateUserDto,
+    @userAndOwnerInfo() userInfo: UserInfoType,
+  ) {
+    return this.usersService.create(createUserDto, userInfo.owner.id);
   }
 }

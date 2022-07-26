@@ -2,11 +2,10 @@ import {
   Column,
   Entity,
   PrimaryGeneratedColumn,
-  ManyToMany,
-  JoinTable,
   OneToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  JoinColumn,
 } from 'typeorm';
 import { UserEntity } from 'src/users/Entities/UserEntity';
 import { OwnerEntity } from '../../owner/Entities';
@@ -34,14 +33,15 @@ export class RoleEntity {
   })
   color: string;
 
-  @ManyToMany(() => UserEntity)
-  @JoinTable()
-  users: UserEntity[];
+  @OneToOne(() => UserEntity)
+  @JoinColumn()
+  created_by: UserEntity;
 
   @Column({ nullable: true })
   description: string;
 
   @OneToOne(() => OwnerEntity)
+  @JoinColumn()
   owner: OwnerEntity;
 
   @CreateDateColumn()
