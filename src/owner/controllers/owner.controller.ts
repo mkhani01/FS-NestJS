@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { OwnerService } from '../services/owner.service';
 import { CreateOwnerDto } from '../dtos/create-owner.dto';
-import { Public } from '../../utils/Public.Meta';
+import { Public } from 'src/utils/Public.Meta';
 
 @Controller('owner')
 export class OwnerController {

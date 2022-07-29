@@ -20,6 +20,12 @@ import { UsersModule } from '../users/users.module';
       useClass: OwnerService,
     },
   ],
+  exports: [
+    {
+      provide: 'OWNER_SERVICE',
+      useClass: OwnerService,
+    },
+  ],
 })
 export class OwnerModule implements NestModule {
   configure(consumer: any) {

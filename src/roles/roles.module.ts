@@ -14,6 +14,12 @@ import { LoggerMiddleware } from '../Middlewares/logger.middleware';
       useClass: RolesService,
     },
   ],
+  exports: [
+    {
+      provide: 'ROLES_SERVICE',
+      useClass: RolesService,
+    },
+  ],
 })
 export class RolesModule implements NestModule {
   configure(consumer: any) {

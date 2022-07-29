@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { GlobalService } from 'src/global/services/global.service';
 import { CreateMainUserDto } from '../dtos/create-main-user.dto';
+import { paginate, PaginateQuery } from 'nestjs-paginate';
 
 @Injectable()
 export class UsersService {
@@ -15,18 +16,25 @@ export class UsersService {
     @Inject('GLOBAL_SERVICE') private readonly globalService: GlobalService,
   ) {}
 
-  async search(ownerId: number) {
-    const allUsers = await this.userRepository.find({
-      where: [
-        {
-          owners: {
-            id: ownerId,
-          },
-        },
+  async search(ownerId: number, query: PaginateQuery) {
+    const queryBuilder = this.userRepository
+      .createQueryBuilder('users')
+      .leftJoinAndSelect('users.owners', 'owners')
+      .where('owners.id = :ownerId', { ownerId });
+
+    const result = await paginate(query, queryBuilder, {
+      sortableColumns: ['id', 'name', 'lastName', 'username'],
+      searchableColumns: [
+        'name',
+        'lastName',
+        'username',
+        'email',
+        'nationalCode',
       ],
-      relations: ['roles'],
+      defaultSortBy: [['id', 'DESC']],
     });
-    return allUsers.map((user) => new SerializedUser(user));
+    delete result.links;
+    return result;
   }
 
   async findById(id: number, ownerId: number) {
@@ -69,5 +77,22 @@ export class UsersService {
       },
       relations: ['owners'],
     });
+  }
+
+  async getCurrentUser(userId: number, ownerId: number) {
+    const user = await this.userRepository.findOne({
+      where: {
+        id: userId,
+      },
+    });
+    if (user) {
+      if (this.globalService.checkOwner(user, ownerId)) {
+        return new SerializedUser(user);
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
   }
 }

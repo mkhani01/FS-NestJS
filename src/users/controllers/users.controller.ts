@@ -16,8 +16,9 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { UsersService } from '../services/users.service';
-import { HttpExceptionFilter } from '../../ExceptionHandler/http-exceptions.filter';
-import { userAndOwnerInfo, UserInfoType } from '../../utils/user.decorator';
+import { HttpExceptionFilter } from 'src/ExceptionHandler/http-exceptions.filter';
+import { userAndOwnerInfo, UserInfoType } from 'src/utils/user.decorator';
+import { Paginate, PaginateQuery } from 'nestjs-paginate';
 
 @Controller('users')
 export class UsersController {
@@ -27,8 +28,11 @@ export class UsersController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('/search')
-  async search(@userAndOwnerInfo() userInfo: UserInfoType) {
-    return this.usersService.search(userInfo.owner.id);
+  async search(
+    @userAndOwnerInfo() userInfo: UserInfoType,
+    @Paginate() query: PaginateQuery,
+  ) {
+    return this.usersService.search(userInfo.owner.id, query);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
@@ -50,5 +54,15 @@ export class UsersController {
     @userAndOwnerInfo() userInfo: UserInfoType,
   ) {
     return this.usersService.create(createUserDto, userInfo.owner.id);
+  }
+
+  @Get('/getCurrent')
+  async getCurrentUser(@userAndOwnerInfo() userInfo: UserInfoType) {
+    const user = await this.usersService.getCurrentUser(
+      userInfo.user.id,
+      userInfo.owner.id,
+    );
+    if (user) return user;
+    else throw new HttpException('user not found !', HttpStatus.NOT_FOUND);
   }
 }

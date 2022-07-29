@@ -1,4 +1,5 @@
 import {
+  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
@@ -9,6 +10,7 @@ import {
 } from 'typeorm';
 import { RoleEntity } from 'src/roles/Entities';
 import { OwnerEntity } from 'src/owner/Entities';
+import * as bcrypt from 'bcrypt';
 
 @Entity()
 export class UserEntity {
@@ -32,7 +34,7 @@ export class UserEntity {
   })
   username: string;
 
-  @Column()
+  @Column({ select: false })
   password: string;
 
   @Column({
@@ -74,4 +76,9 @@ export class UserEntity {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @BeforeInsert()
+  async encryptPassword() {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
 }
