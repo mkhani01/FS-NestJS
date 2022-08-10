@@ -1,4 +1,4 @@
-import {RoleEntity} from "./RoleEntity";
+import {Role} from "./Role";
 import {Exclude} from "class-transformer";
 
 
@@ -10,7 +10,7 @@ export class SerializedUser {
     phoneNumber: string;
     nationalCode?: string;
     email: string;
-    roles: RoleEntity[]
+    roles: Role[]
     address?: string;
 
 

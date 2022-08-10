@@ -13,7 +13,11 @@ type Role = {
   name?: string;
 };
 
-export class CreateUserDto {
+type owner = {
+  id: number;
+};
+
+export class CreateMainUserDto {
   @IsOptional()
   @Length(5, 20)
   name?: string;
@@ -48,6 +52,9 @@ export class CreateUserDto {
   @IsOptional()
   @Length(0, 100)
   address?: string;
+
+  @IsNotEmpty()
+  owners: owner[];
 
   @IsOptional()
   isMainUser: boolean = false;

@@ -1,6 +1,6 @@
-import {RoleEntity} from "./RoleEntity";
+import {Role} from "./Role";
 
-export class UserEntity {
+export class User {
     id: number;
     name?: string;
     lastName?: string;
@@ -9,6 +9,6 @@ export class UserEntity {
     phoneNumber: string;
     nationalCode?: string;
     email: string;
-    roles: RoleEntity[]
+    roles: Role[]
     address?: string;
 }

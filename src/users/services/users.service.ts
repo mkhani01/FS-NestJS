@@ -1,57 +1,98 @@
-import {Injectable} from '@nestjs/common';
-import {SerializedUser} from "../types/SerializedUser";
-import {UserEntity} from "../types/UserEntity";
-import {CreateUserDto} from "../dtos/create-user.dto";
+import { Inject, Injectable } from '@nestjs/common';
+import { SerializedUser } from '../types/SerializedUser';
+import { UserEntity as UserEntity } from '../Entities/UserEntity';
+import { CreateUserDto } from '../dtos/create-user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { GlobalService } from 'src/global/services/global.service';
+import { CreateMainUserDto } from '../dtos/create-main-user.dto';
+import { paginate, PaginateQuery } from 'nestjs-paginate';
 
 @Injectable()
 export class UsersService {
-    private readonly users: UserEntity[] = [
-        {
-            id: 1,
-            name: null,
-            lastName: null,
-            nationalCode: null,
-            address: null,
-            username: "admin3",
-            password: "admin3",
-            phoneNumber: "09121234563",
-            email: "admin3@admin3.com",
-            roles: [{
-                id: 1,
-                name: "admin",
-                permissions: ["ALL"],
-                color: null
-            }]
-        }
-    ]
+  constructor(
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
+    @Inject('GLOBAL_SERVICE') private readonly globalService: GlobalService,
+  ) {}
 
-    search() {
-        return this.users.map(user => {
-            return new SerializedUser(user);
-        });
-    }
+  async search(ownerId: number, query: PaginateQuery) {
+    const queryBuilder = this.userRepository
+      .createQueryBuilder('users')
+      .leftJoinAndSelect('users.owners', 'owners')
+      .where('owners.id = :ownerId', { ownerId });
 
-    findById(id: number) {
-        const user = this.users.find(user => user.id === id);
-        if (user) return new SerializedUser(user);
-        else return user
-    }
+    const result = await paginate(query, queryBuilder, {
+      sortableColumns: ['id', 'name', 'lastName', 'username'],
+      searchableColumns: [
+        'name',
+        'lastName',
+        'username',
+        'email',
+        'nationalCode',
+      ],
+      defaultSortBy: [['id', 'DESC']],
+    });
+    delete result.links;
+    return result;
+  }
 
-    create(createUserDto: CreateUserDto) {
-        const {email, password, phoneNumber, username, name, lastName, nationalCode, address} = createUserDto;
-        const user: UserEntity = {
-            address: address,
-            email: email,
-            lastName: lastName,
-            name: name,
-            nationalCode: nationalCode,
-            password: password,
-            phoneNumber: phoneNumber,
-            roles: [],
-            username: username,
-            id: this.users.length + 1
-        };
-        this.users.push(user);
-        return this.users;
+  async findById(id: number, ownerId: number) {
+    const user = await this.userRepository.findOne({
+      where: {
+        id: id,
+      },
+      relations: ['roles', 'owners'],
+    });
+    if (user) {
+      if (this.globalService.checkOwner(user, ownerId)) {
+        return new SerializedUser(user);
+      } else {
+        return null;
+      }
+    } else return null;
+  }
+
+  async create(createUserDto: CreateUserDto, ownerId: number) {
+    const dtoData = {
+      ...createUserDto,
+      isMainUser: false,
+      owners: [{ id: ownerId }],
+    };
+    const newUser = this.userRepository.create(dtoData);
+    const savedUser = await this.userRepository.save(newUser);
+    return this.findById(savedUser.id, ownerId);
+  }
+
+  async createMainUser(createMainUserDto: CreateMainUserDto, ownerId: number) {
+    const newUser = this.userRepository.create(createMainUserDto);
+    const savedUser = await this.userRepository.save(newUser);
+    return this.findById(savedUser.id, ownerId);
+  }
+
+  async findUserByUserName(username: string) {
+    return this.userRepository.findOne({
+      where: {
+        username: username,
+      },
+      relations: ['owners'],
+    });
+  }
+
+  async getCurrentUser(userId: number, ownerId: number) {
+    const user = await this.userRepository.findOne({
+      where: {
+        id: userId,
+      },
+    });
+    if (user) {
+      if (this.globalService.checkOwner(user, ownerId)) {
+        return new SerializedUser(user);
+      } else {
+        return null;
+      }
+    } else {
+      return null;
     }
+  }
 }
