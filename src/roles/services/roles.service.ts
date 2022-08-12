@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RoleEntity } from '../Entities';
@@ -20,6 +20,7 @@ export class RolesService {
           id: ownerId,
         },
       },
+      relations: ['permissions'],
     });
   }
 
@@ -40,5 +41,24 @@ export class RolesService {
       owner: { id: ownerId },
     });
     return this.roleRepository.save(newRole);
+  }
+
+  async getRolePermissions(id: number, ownerId: number) {
+    const role = await this.roleRepository.findOne({
+      where: { id: id },
+      relations: [
+        'permissions',
+        'owner',
+        'permissions.parent',
+        'permissions.children',
+      ],
+    });
+    if (role) {
+      if (this.globalService.checkOwner(role, ownerId)) {
+        return role.permissions;
+      } else {
+        return new HttpException('Unauthorized', 401);
+      }
+    } else return new HttpException('Not Found', 404);
   }
 }

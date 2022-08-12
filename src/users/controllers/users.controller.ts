@@ -19,7 +19,9 @@ import { UsersService } from '../services/users.service';
 import { HttpExceptionFilter } from 'src/ExceptionHandler/http-exceptions.filter';
 import { userAndOwnerInfo, UserInfoType } from 'src/utils/user.decorator';
 import { Paginate, PaginateQuery } from 'nestjs-paginate';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(

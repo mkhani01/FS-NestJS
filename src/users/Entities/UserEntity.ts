@@ -3,8 +3,10 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -61,6 +63,10 @@ export class UserEntity {
     nullable: true,
   })
   address: string;
+
+  @OneToOne(() => OwnerEntity)
+  @JoinColumn()
+  defaultOwner: OwnerEntity;
 
   @ManyToMany(() => OwnerEntity, void 0, { cascade: true, eager: true })
   @JoinTable()

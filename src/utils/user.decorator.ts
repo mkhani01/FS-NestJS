@@ -11,7 +11,7 @@ export const userAndOwnerInfo = createParamDecorator(
     const decodedToken: any = decodeToken(request.headers.authorization);
     const sendingInfo: UserInfoType = {
       user: {
-        id: decodedToken.userDB ? decodedToken.userDB.id : 'UNAUTHORIZED',
+        id: decodedToken.tokenData ? decodedToken.tokenData.id : 'UNAUTHORIZED',
       },
       owner: {
         id: decodedToken.owner ? decodedToken.owner.id : 'UNAUTHORIZED',

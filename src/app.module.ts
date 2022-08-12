@@ -5,12 +5,15 @@ import { RolesModule } from './roles/roles.module';
 import { AuthModule } from './auth/auth.module';
 import { OwnerModule } from './owner/owner.module';
 import { GlobalModule } from './global/global.module';
+import { PermissionsModule } from './permissions/permissions.module';
 import UserEntities from './users/Entities';
 import RoleEntities from './roles/Entities';
 import OwnerEntities from './owner/Entities';
+import PermissionEntities from './permissions/Entities';
 
 @Module({
   imports: [
+    PermissionsModule,
     OwnerModule,
     UsersModule,
     RolesModule,
@@ -23,8 +26,14 @@ import OwnerEntities from './owner/Entities';
       username: 'root',
       password: 'mysql',
       database: 'nest_fs',
-      entities: [...UserEntities, ...RoleEntities, ...OwnerEntities],
+      entities: [
+        ...UserEntities,
+        ...RoleEntities,
+        ...OwnerEntities,
+        ...PermissionEntities,
+      ],
       synchronize: true,
+      logging: false,
       autoLoadEntities: true,
     }),
   ],
