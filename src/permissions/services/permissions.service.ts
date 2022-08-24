@@ -21,6 +21,11 @@ export class PermissionsService {
   }
 
   async getUserPermissions(_userId: number, _ownerId: number) {
-    return this.permissionRepository.findTrees();
+    return this.permissionRepository.find({
+      relations:{
+        parent:true,
+        children:true
+      }
+    });
   }
 }

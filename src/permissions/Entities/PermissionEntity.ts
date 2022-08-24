@@ -1,14 +1,12 @@
 import {
   Entity,
-  Tree,
   Column,
   PrimaryGeneratedColumn,
-  TreeChildren,
-  TreeParent,
+  ManyToOne,
+  OneToMany,
 } from 'typeorm';
 
 @Entity()
-@Tree('closure-table')
 export class PermissionEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -19,9 +17,9 @@ export class PermissionEntity {
   @Column({ nullable: true })
   displayName?: string;
 
-  @TreeChildren()
+  @ManyToOne(()=>PermissionEntity,(permission) => permission.parent)
   children: PermissionEntity[];
 
-  @TreeParent()
+  @OneToMany(()=>PermissionEntity, (permission) => permission.children)
   parent: PermissionEntity;
 }
