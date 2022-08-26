@@ -18,8 +18,12 @@ import { CreateUserDto } from '../dtos/create-user.dto';
 import { UsersService } from '../services/users.service';
 import { HttpExceptionFilter } from 'src/ExceptionHandler/http-exceptions.filter';
 import { userAndOwnerInfo, UserInfoType } from 'src/utils/user.decorator';
+import { RequirePermissions } from 'src/utils/permission.decorator';
 import { Paginate, PaginateQuery } from 'nestjs-paginate';
+import { ApiTags } from '@nestjs/swagger';
+import { permissionEnums } from '../permissions/Permissions';
 
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(
@@ -27,6 +31,7 @@ export class UsersController {
   ) {}
 
   @UseInterceptors(ClassSerializerInterceptor)
+  @RequirePermissions(permissionEnums.LoadUser)
   @Get('/search')
   async search(
     @userAndOwnerInfo() userInfo: UserInfoType,

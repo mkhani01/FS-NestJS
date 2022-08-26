@@ -57,6 +57,7 @@ export class UsersService {
     const dtoData = {
       ...createUserDto,
       isMainUser: false,
+      defaultOwner: { id: ownerId },
       owners: [{ id: ownerId }],
     };
     const newUser = this.userRepository.create(dtoData);
@@ -75,7 +76,18 @@ export class UsersService {
       where: {
         username: username,
       },
-      relations: ['owners'],
+      select: [
+        'id',
+        'name',
+        'lastName',
+        'username',
+        'password',
+        'phoneNumber',
+        'nationalCode',
+        'email',
+        'address',
+      ],
+      relations: ['owners', 'defaultOwner'],
     });
   }
 
@@ -91,6 +103,15 @@ export class UsersService {
       } else {
         return null;
       }
+    } else {
+      return null;
+    }
+  }
+
+  async getCurrentUserRoles(userId: number, ownerId: number) {
+    const user = await this.findById(userId, ownerId);
+    if (user) {
+      return user.roles;
     } else {
       return null;
     }

@@ -54,6 +54,9 @@ export class CreateMainUserDto {
   address?: string;
 
   @IsNotEmpty()
+  defaultOwner: owner;
+
+  @IsNotEmpty()
   owners: owner[];
 
   @IsOptional()

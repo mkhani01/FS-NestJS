@@ -1,10 +1,40 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '../app.module';
+import { userPermissions } from 'src/users/permissions/Permissions';
+import { rolePermissions } from 'src/roles/permissions/Permissions';
+import { ownerPermissions } from 'src/owner/permissions/Permissions';
 
 async function bootstrap() {
   const application = await NestFactory.createApplicationContext(AppModule);
+  const allPermissions = [rolePermissions, userPermissions, ownerPermissions];
+  const permissionService = application.get('PERMISSION_SERVICE');
+  console.log('Seeding permissions');
+  const superAdminPermission = await permissionService.create({
+    key: 'SUPER_ADMIN',
+    displayName: 'Super admin',
+    parent: null,
+  });
+  for (const permission of allPermissions) {
+    console.log(permission);
+    const createdRoot = await permissionService.create({
+      ...permission,
+      parent: {
+        id: superAdminPermission.id,
+      },
+    });
+    if (permission.children?.length) {
+      for (const childPermission of permission.children) {
+        await permissionService.create({
+          ...childPermission,
+          parent: {
+            id: createdRoot.id,
+          },
+        });
+      }
+    }
+  }
   const ownerService = application.get('OWNER_SERVICE');
-  console.log('Creating owners ...');
+  console.log('Seeding permissions done. Seeding owners ...');
   const createdOwner = await ownerService.createOwner({
     name: 'Test owner 1',
     displayName: 'Owner test 1',
@@ -15,7 +45,7 @@ async function bootstrap() {
     {
       name: 'system_admin',
       displayName: 'Admin',
-      permissions: ['ALL'],
+      permissions: [superAdminPermission],
       color: '#000',
       description: 'This is admin role created by system',
     },
@@ -34,6 +64,7 @@ async function bootstrap() {
       email: 'admin@admin.com',
       roles: [{ id: createdRole.id }],
       address: 'Iran,Tehran,212th east,district 22',
+      defaultOwner: { id: createdOwner.id },
       owners: [{ id: createdOwner.id }],
       isMainUser: true,
     },

@@ -58,6 +58,7 @@ export class OwnerService {
       email: createOwnerDto.email,
       address: createOwnerDto.address,
       isMainUser: true,
+      defaultOwner: { id: newOwner.id },
       owners: [{ id: newOwner.id }],
       roles: [{ id: 1 }],
     };

@@ -26,9 +26,13 @@ export class AuthService {
   }
   async login(user: any) {
     const userDB = await this.userService.findUserByUserName(user.username);
-    //Hint : The owner is first owner of the database for now , later user will select owner and
-    // there will be a default owner for each user
-    const payload = { userDB, owner: userDB.owners[0] };
+    delete userDB.password;
+    //Hint : The default owner is set now , in feature there will be a feature to select owner
+    const tokenData = {
+      id: userDB.id,
+      username: userDB.username,
+    };
+    const payload = { tokenData, owner: userDB.defaultOwner };
     return {
       access_token: this.jwtService.sign(payload),
     };

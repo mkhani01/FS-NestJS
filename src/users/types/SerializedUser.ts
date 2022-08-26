@@ -1,23 +1,21 @@
-import {Role} from "./Role";
-import {Exclude} from "class-transformer";
-
+import { Exclude } from 'class-transformer';
+import { RoleEntity } from 'src/roles/Entities';
 
 export class SerializedUser {
-    name?: string;
-    lastName?: string;
-    id: number;
-    username: string;
-    phoneNumber: string;
-    nationalCode?: string;
-    email: string;
-    roles: Role[]
-    address?: string;
+  name?: string;
+  lastName?: string;
+  id: number;
+  username: string;
+  phoneNumber: string;
+  nationalCode?: string;
+  email: string;
+  roles: RoleEntity[];
+  address?: string;
 
+  @Exclude()
+  password: string;
 
-    @Exclude()
-    password: string;
-
-    constructor(partial: Partial<SerializedUser>) {
-        Object.assign(this, partial);
-    }
+  constructor(partial: Partial<SerializedUser>) {
+    Object.assign(this, partial);
+  }
 }

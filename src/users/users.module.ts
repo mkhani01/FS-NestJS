@@ -5,6 +5,7 @@ import { LoggerMiddleware } from '../Middlewares/logger.middleware';
 import { UserEntity } from './Entities';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { PermissionsGaurd } from 'src/auth/permissions.guard';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity])],
@@ -13,6 +14,10 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
     {
       provide: 'APP_GUARD',
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: 'APP_GUARD',
+      useClass: PermissionsGaurd,
     },
     {
       provide: 'USER_SERVICE',

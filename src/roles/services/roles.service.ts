@@ -20,6 +20,7 @@ export class RolesService {
           id: ownerId,
         },
       },
+      relations: ['permissions'],
     });
   }
 
@@ -40,5 +41,27 @@ export class RolesService {
       owner: { id: ownerId },
     });
     return this.roleRepository.save(newRole);
+  }
+
+  async getRolePermissions(id: number, ownerId: number) {
+    const role = await this.roleRepository.findOne({
+      where: { id: id },
+      relations: {
+        owner: true,
+        permissions: {
+          parent: true,
+          children: true,
+        },
+      },
+    });
+    if (role) {
+      if (this.globalService.checkOwner(role, ownerId)) {
+        return role.permissions;
+      } else {
+        return [];
+      }
+    } else {
+      return [];
+    }
   }
 }

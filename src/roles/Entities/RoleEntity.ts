@@ -6,9 +6,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   JoinColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { UserEntity } from 'src/users/Entities/UserEntity';
-import { OwnerEntity } from '../../owner/Entities';
+import { OwnerEntity } from 'src/owner/Entities';
+import { PermissionEntity } from 'src/permissions/Entities';
 
 @Entity()
 export class RoleEntity {
@@ -25,8 +28,9 @@ export class RoleEntity {
   @Column()
   displayName: string;
 
-  @Column('simple-array')
-  permissions: string[];
+  @ManyToMany(() => PermissionEntity)
+  @JoinTable()
+  permissions: PermissionEntity[];
 
   @Column({
     nullable: true,
