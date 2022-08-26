@@ -1,4 +1,4 @@
-import { HttpException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RoleEntity } from '../Entities';
@@ -46,19 +46,22 @@ export class RolesService {
   async getRolePermissions(id: number, ownerId: number) {
     const role = await this.roleRepository.findOne({
       where: { id: id },
-      relations: [
-        'permissions',
-        'owner',
-        'permissions.parent',
-        'permissions.children',
-      ],
+      relations: {
+        owner: true,
+        permissions: {
+          parent: true,
+          children: true,
+        },
+      },
     });
     if (role) {
       if (this.globalService.checkOwner(role, ownerId)) {
         return role.permissions;
       } else {
-        return new HttpException('Unauthorized', 401);
+        return [];
       }
-    } else return new HttpException('Not Found', 404);
+    } else {
+      return [];
+    }
   }
 }

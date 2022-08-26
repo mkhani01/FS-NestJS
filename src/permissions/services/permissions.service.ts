@@ -20,12 +20,42 @@ export class PermissionsService {
     return this.permissionRepository.save(registerPermissionDto);
   }
 
-  async getUserPermissions(_userId: number, _ownerId: number) {
-    return this.permissionRepository.find({
-      relations:{
-        parent:true,
-        children:true
+  async getUserPermissions(userId: number, ownerId: number) {
+    const userRoles = await this.userService.getCurrentUserRoles(
+      userId,
+      ownerId,
+    );
+    if (!userRoles) {
+      return null;
+    } else {
+      let userPermissions = [];
+      for (const role of userRoles) {
+        const rolePermissions = await this.rolesService.getRolePermissions(
+          role.id,
+          ownerId,
+        );
+        userPermissions = userPermissions.concat(rolePermissions);
+      }
+
+      return this.getPermissionKeys(userPermissions);
+    }
+  }
+
+  getPermissionKeys(permissions: PermissionEntity[]) {
+    let keys = [];
+    permissions.forEach((rootPermission: PermissionEntity) => {
+      keys = keys.concat(rootPermission.key);
+      if (rootPermission.children) {
+        rootPermission.children.forEach((childPermission: PermissionEntity) => {
+          keys = keys.concat(childPermission.key);
+          if (childPermission.children) {
+            childPermission.children.forEach((grandChild: PermissionEntity) => {
+              keys = keys.concat(grandChild.key);
+            });
+          }
+        });
       }
     });
+    return keys;
   }
 }

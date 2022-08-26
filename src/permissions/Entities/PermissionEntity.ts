@@ -17,9 +17,12 @@ export class PermissionEntity {
   @Column({ nullable: true })
   displayName?: string;
 
-  @ManyToOne(()=>PermissionEntity,(permission) => permission.parent)
-  children: PermissionEntity[];
-
-  @OneToMany(()=>PermissionEntity, (permission) => permission.children)
+  @ManyToOne(() => PermissionEntity, (permission) => permission.children)
   parent: PermissionEntity;
+
+  @OneToMany(() => PermissionEntity, (permission) => permission.parent, {
+    cascade: true,
+    eager: true,
+  })
+  children: PermissionEntity[];
 }

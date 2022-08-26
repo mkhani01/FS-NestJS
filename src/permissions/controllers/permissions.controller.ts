@@ -2,6 +2,7 @@ import { Controller, Get, Inject } from '@nestjs/common';
 import { PermissionsService } from '../services/permissions.service';
 import { userAndOwnerInfo, UserInfoType } from 'src/utils/user.decorator';
 import { ApiTags } from '@nestjs/swagger';
+import { RequirePermissions } from 'src/utils/permission.decorator';
 
 @ApiTags('Permissions')
 @Controller('permissions')

@@ -1,4 +1,4 @@
-import { HttpException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { SerializedUser } from '../types/SerializedUser';
 import { UserEntity as UserEntity } from '../Entities/UserEntity';
 import { CreateUserDto } from '../dtos/create-user.dto';
@@ -113,7 +113,7 @@ export class UsersService {
     if (user) {
       return user.roles;
     } else {
-      return new HttpException('User not found', 404);
+      return null;
     }
   }
 }

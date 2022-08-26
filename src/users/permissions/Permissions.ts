@@ -1,5 +1,12 @@
 import { RegisterPermissionDto } from 'src/permissions/dtos/register-permission.dto';
 
+export enum permissionEnums {
+  CreateUser = 'CREATE_USER',
+  DeleteUser = 'DELETE_USER',
+  LoadUser = 'LOAD_USER',
+  UpdateUser = 'UPDATE_USERS',
+}
+
 export const userPermissions: RegisterPermissionDto = {
   key: 'USER_GENERAL',
   displayName: 'All users permissions',
@@ -13,8 +20,8 @@ export const userPermissions: RegisterPermissionDto = {
       displayName: 'Delete user',
     },
     {
-      key: 'SHOW_USER',
-      displayName: 'show users',
+      key: 'LOAD_USER',
+      displayName: 'Load users',
     },
     {
       key: 'UPDATE_USERS',

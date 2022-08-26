@@ -12,21 +12,27 @@ async function bootstrap() {
   const superAdminPermission = await permissionService.create({
     key: 'SUPER_ADMIN',
     displayName: 'Super admin',
+    parent: null,
   });
-  // for (const permission of allPermissions) {
-  //   const createdRoot = await permissionService.create({
-  //     ...permission,
-  //     parent: superAdminPermission,
-  //   });
-  //   if (permission.children?.length) {
-  //     for (const childPermission of permission.children) {
-  //       await permissionService.create({
-  //         ...childPermission,
-  //         parent: createdRoot,
-  //       });
-  //     }
-  //   }
-  // }
+  for (const permission of allPermissions) {
+    console.log(permission);
+    const createdRoot = await permissionService.create({
+      ...permission,
+      parent: {
+        id: superAdminPermission.id,
+      },
+    });
+    if (permission.children?.length) {
+      for (const childPermission of permission.children) {
+        await permissionService.create({
+          ...childPermission,
+          parent: {
+            id: createdRoot.id,
+          },
+        });
+      }
+    }
+  }
   const ownerService = application.get('OWNER_SERVICE');
   console.log('Seeding permissions done. Seeding owners ...');
   const createdOwner = await ownerService.createOwner({
