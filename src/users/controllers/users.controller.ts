@@ -20,10 +20,11 @@ import { HttpExceptionFilter } from 'src/ExceptionHandler/http-exceptions.filter
 import { userAndOwnerInfo, UserInfoType } from 'src/utils/user.decorator';
 import { RequirePermissions } from 'src/utils/permission.decorator';
 import { Paginate, PaginateQuery } from 'nestjs-paginate';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { permissionEnums } from '../permissions/Permissions';
 
 @ApiTags('Users')
+@ApiBearerAuth()
 @Controller('users')
 export class UsersController {
   constructor(

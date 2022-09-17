@@ -1,10 +1,10 @@
 import { Controller, Get, Inject } from '@nestjs/common';
 import { PermissionsService } from '../services/permissions.service';
 import { userAndOwnerInfo, UserInfoType } from 'src/utils/user.decorator';
-import { ApiTags } from '@nestjs/swagger';
-import { RequirePermissions } from 'src/utils/permission.decorator';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Permissions')
+@ApiBearerAuth()
 @Controller('permissions')
 export class PermissionsController {
   constructor(
