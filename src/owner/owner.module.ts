@@ -20,12 +20,13 @@ import { PermissionsModule } from 'src/permissions/permissions.module';
   providers: [
     {
       provide: 'APP_GUARD',
-      useClass: JwtAuthGuard,
+      useExisting: JwtAuthGuard,
     },
     {
       provide: 'OWNER_SERVICE',
       useClass: OwnerService,
     },
+    JwtAuthGuard,
   ],
   exports: [
     {
