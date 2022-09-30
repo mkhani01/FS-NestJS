@@ -37,7 +37,7 @@ function generateAppConfig(): TypeOrmModuleOptions {
         : process.env.MYSQL_DATABASE,
     synchronize: true,
     logging: true,
-    logger: process.env.MODE !== 'PRODUCTION' ? 'debug' : 'file',
+    logger: process.env.MODE !== 'PRODUCTION' ? 'debug' : 'simple-console',
     autoLoadEntities: true,
   };
 }
