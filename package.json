@@ -20,7 +20,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "set MODE=TEST && jest --config jest-e2e.json",
     "seed:run": "ts-node -r tsconfig-paths/register src/seeds/sampleSeed.ts",
-    "seed:run:Test": "set MODE=TEST && ts-node -r tsconfig-paths/register src/seeds/sampleSeed.ts"
+    "seed:run:Test": "set MODE=TEST && ts-node -r tsconfig-paths/register src/seeds/sampleSeed.ts",
+    "compodoc": "compodoc -s -d ./documentation --theme laravel --open"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
