@@ -70,7 +70,7 @@ $ npm run test:cov
 ```
 ## Development
 Project structure is Nest js standard: 
-```bash
+```text
 .
 ├── src
 │ ├── Middlewares
@@ -100,6 +100,14 @@ Project structure is Nest js standard:
 │ │ ├── Entity_Name.e2e.ts
 ```
 To build a new module, service, controller etc. you can use ``nest generator``. You can find all required knowladge in [NestJs](https://docs.nestjs.com/)
+
+## swagger 
+you can open swagger in app runing url + /swagger 
+<br>
+ like : 
+```text 
+localhost:3000/swagger
+```
 ## Stay in touch
 
 - Author - [Mohammad khani](mailto:Mohammadkhani722@gmail.com)
