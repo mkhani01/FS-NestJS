@@ -4,6 +4,7 @@ import { RolesController } from './controllers/roles.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RoleEntity } from './Entities';
 import { LoggerMiddleware } from '../Middlewares/logger.middleware';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Module({
   imports: [TypeOrmModule.forFeature([RoleEntity])],
@@ -12,6 +13,10 @@ import { LoggerMiddleware } from '../Middlewares/logger.middleware';
     {
       provide: 'ROLES_SERVICE',
       useClass: RolesService,
+    },
+    {
+      provide: 'APP_GUARD',
+      useClass: JwtAuthGuard,
     },
   ],
   exports: [

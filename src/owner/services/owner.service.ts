@@ -6,6 +6,8 @@ import { CreateOwnerDto } from '../dtos/create-owner.dto';
 import { SingleOwnerDto } from '../dtos/create-single-owner.dto';
 import { UsersService } from 'src/users/services/users.service';
 import { CreateMainUserDto } from 'src/users/dtos/create-main-user.dto';
+import { RolesService } from 'src/roles/services/roles.service';
+import { PermissionsService } from 'src/permissions/services/permissions.service';
 
 @Injectable()
 export class OwnerService {
@@ -13,6 +15,9 @@ export class OwnerService {
     @InjectRepository(OwnerEntity)
     private readonly ownerRepository: Repository<OwnerEntity>,
     @Inject('USER_SERVICE') private readonly usersService: UsersService,
+    @Inject('ROLES_SERVICE') private readonly rolesService: RolesService,
+    @Inject('PERMISSION_SERVICE')
+    private readonly permissionsService: PermissionsService,
   ) {}
 
   async search() {
@@ -48,6 +53,19 @@ export class OwnerService {
       displayName: createOwnerDto.ownerDisplayName,
     };
     const newOwner = await this.createOwner(singleOwnerDto);
+    const mainPermission = await this.permissionsService.findPermissionByKey(
+      'SUPER_ADMIN',
+    );
+    const newRole = await this.rolesService.create(
+      {
+        name: 'ADMIN',
+        description: 'Main role ADMIN',
+        displayName: 'Admin',
+        color: '#00000',
+        permissions: [mainPermission],
+      },
+      newOwner.id,
+    );
     const createMainUserDto: CreateMainUserDto = {
       name: createOwnerDto.name,
       lastName: createOwnerDto.lastName,
@@ -60,7 +78,7 @@ export class OwnerService {
       isMainUser: true,
       defaultOwner: { id: newOwner.id },
       owners: [{ id: newOwner.id }],
-      roles: [{ id: 1 }],
+      roles: [{ id: newRole.id }],
     };
     return this.createOwnerUser(createMainUserDto, newOwner.id);
   }

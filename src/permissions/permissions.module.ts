@@ -20,7 +20,7 @@ import { LoggerMiddleware } from 'src/Middlewares/logger.middleware';
   providers: [
     {
       provide: 'APP_GUARD',
-      useClass: JwtAuthGuard,
+      useExisting: JwtAuthGuard,
     },
     {
       provide: 'APP_GUARD',
@@ -30,6 +30,7 @@ import { LoggerMiddleware } from 'src/Middlewares/logger.middleware';
       provide: 'PERMISSION_SERVICE',
       useClass: PermissionsService,
     },
+    JwtAuthGuard,
   ],
   exports: [
     {

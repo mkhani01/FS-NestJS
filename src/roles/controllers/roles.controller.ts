@@ -14,9 +14,10 @@ import {
 import { RolesService } from '../services/roles.service';
 import { CreateRoleDto } from '../dtos/create-role.dto';
 import { userAndOwnerInfo, UserInfoType } from 'src/utils/user.decorator';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Roles')
+@ApiBearerAuth()
 @Controller('roles')
 export class RolesController {
   constructor(

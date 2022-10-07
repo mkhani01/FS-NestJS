@@ -1,10 +1,10 @@
 import { RegisterPermissionDto } from 'src/permissions/dtos/register-permission.dto';
 
 export enum permissionEnums {
-  CreateUser = 'CREATE_ROLE',
-  DeleteUser = 'DELETE_ROLE',
-  LoadUser = 'LOAD_ROLE',
-  UpdateUser = 'UPDATE_ROLE',
+  CreateRole = 'CREATE_ROLE',
+  DeleteRole = 'DELETE_ROLE',
+  LoadRole = 'LOAD_ROLE',
+  UpdateRole = 'UPDATE_ROLE',
 }
 
 export const rolePermissions: RegisterPermissionDto = {

@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PermissionEntity } from 'src/permissions/Entities';
-import { TreeRepository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { RegisterPermissionDto } from 'src/permissions/dtos/register-permission.dto';
 import { UsersService } from 'src/users/services/users.service';
 import { RolesService } from 'src/roles/services/roles.service';
@@ -10,7 +10,7 @@ import { RolesService } from 'src/roles/services/roles.service';
 export class PermissionsService {
   constructor(
     @InjectRepository(PermissionEntity)
-    private readonly permissionRepository: TreeRepository<PermissionEntity>,
+    private readonly permissionRepository: Repository<PermissionEntity>,
     @Inject('USER_SERVICE') private readonly userService: UsersService,
     @Inject('ROLES_SERVICE') private readonly rolesService: RolesService,
   ) {}
@@ -57,5 +57,14 @@ export class PermissionsService {
       }
     });
     return keys;
+  }
+
+  async findPermissionByKey(key: string) {
+    return this.permissionRepository
+      .createQueryBuilder('permissions')
+      .leftJoinAndSelect('permissions.children', 'children')
+      .leftJoinAndSelect('permissions.parent', 'parent')
+      .where('permissions.key = :key', { key: key })
+      .getOne();
   }
 }

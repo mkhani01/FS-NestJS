@@ -20,9 +20,7 @@ export class RoleEntity {
   })
   id: number;
 
-  @Column({
-    unique: true,
-  })
+  @Column()
   name: string;
 
   @Column()

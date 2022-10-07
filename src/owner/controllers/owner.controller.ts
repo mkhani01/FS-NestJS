@@ -10,7 +10,7 @@ import {
 import { OwnerService } from '../services/owner.service';
 import { CreateOwnerDto } from '../dtos/create-owner.dto';
 import { Public } from 'src/utils/Public.Meta';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Owners')
 @Controller('owner')
@@ -19,6 +19,7 @@ export class OwnerController {
     @Inject('OWNER_SERVICE') private readonly ownerService: OwnerService,
   ) {}
 
+  @ApiBearerAuth()
   @Get('/search')
   async search() {
     await this.ownerService.search();
